@@ -1,0 +1,26 @@
+#!/bin/bash
+set -e
+DMENU_CMD="dmenu -nb black -nf white -sb yellow -sf black -fn hack:size=10"
+THEME="gruvbox
+sad
+bathroom
+forest
+heaven
+house
+island
+paint
+"
+CHOICE=$(printf "$THEME" | $DMENU_CMD -p "Select a theme")
+SWALLOW=
+
+case $CHOICE in
+  $CHOICE) wal -i ~/Sync/Wallpaper/backend/$CHOICE.png --backend wal && convert ~/Sync/Wallpaper/backend/$CHOICE.png ~/Sync/Wallpaper/custom.jpg && feh --bg-scale ~/Sync/Wallpaper/custom.jpg && alacritty-color-export ;;
+
+esac
+
+
+if [ -z "$CHOICE" ]; then
+  exit 1
+else
+  echo 'awesome.restart()' | awesome-client
+fi

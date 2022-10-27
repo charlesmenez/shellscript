@@ -1,0 +1,23 @@
+#!/bin/bash
+
+NOW=$(date '+%Y%m%d')
+#date file
+LAST_FILE_PATH=~/Youtube/config/lastdate
+#subscription file
+SUBS_FILE_PATH=~/Youtube/config/subs
+
+if [ ! -f "$LAST_FILE_PATH" ]; then
+  echo $NOW > $LAST_FILE_PATH
+  echo 'Created "Last" file. Now exiting.'
+  exit 0
+fi
+
+LAST=$(cat $LAST_FILE_PATH)
+
+yt-dlp \
+  -a $SUBS_FILE_PATH \
+  --dateafter $NOW \
+  --playlist-end 2 \
+  --break-on-existing 
+
+sed -i -e 's/.*/$NOW/g' ~/Youtube/config/lastdate
