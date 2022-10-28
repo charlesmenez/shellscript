@@ -18,7 +18,9 @@ ShortCircuit
 Tecmundo
 ResumindoAnimes
 ResumindoFilmes
-FilmesNostalgicos"
+FilmesNostalgicos
+ThePrimeagen"
+
 CHOICE=$(printf "$CHOICES" | $DMENU_CMD -p "Select a Channel:")
 SWALLOW=
 
@@ -41,5 +43,6 @@ case $CHOICE in
   Tecmundo) ytfzf -D -c youtube-channel youtube.com/c/tecmundo ;;
   CanalTech) ytfzf -D -c youtube-channel https://www.youtube.com/CanalTech ;;
   BrodieRobertson) ytfzf -D -c youtube-channel https://www.youtube.com/c/BrodieRobertson ;;
+  ThePrimeagen) ytfzf -D -c youtube-channel https://www.youtube.com/c/ThePrimeagen ;;
   
 esac

@@ -9,6 +9,7 @@ heaven
 house
 island
 paint
+8bit
 "
 CHOICE=$(printf "$THEME" | $DMENU_CMD -p "Select a theme")
 SWALLOW=
