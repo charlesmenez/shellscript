@@ -14,7 +14,7 @@ CHOICE=$(printf "$THEME" | $DMENU_CMD -p "Select a theme")
 SWALLOW=
 
 case $CHOICE in
-  $CHOICE) wal -i ~/Sync/Wallpaper/backend/$CHOICE.png --backend wal && convert ~/Sync/Wallpaper/backend/$CHOICE.png ~/Sync/Wallpaper/custom.jpg && feh --bg-scale ~/Sync/Wallpaper/custom.jpg && alacritty-color-export ;;
+  $CHOICE) wal -i ~/Projects/awesome/AwesomeWM/wallpapers/$CHOICE.png --backend wal && convert ~/Projects/awesome/AwesomeWM/wallpapers/$CHOICE.png ~/custom.jpg && feh --bg-scale ~/custom.jpg && alacritty-color-export ;;
 
 esac
 
