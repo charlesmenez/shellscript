@@ -1,7 +1,6 @@
 #!/bin/sh
 # Alacritty Color Export
 # Version 0.1.1
-# github.com/egeesin
 #
 # Exports generated Wal colors to Alacritty config
 # WARNING: Don't forget to backup your Alacritty config
