@@ -10,12 +10,22 @@ house
 island
 paint
 8bit
+solarizedascii
+SolarizedBall
+SegaGenesis
+Space8bit
 "
+BACKEND="colorz
+wal
+haishoku
+colorthief"
+
 CHOICE=$(printf "$THEME" | $DMENU_CMD -p "Select a theme")
+BACKENDCHOICE=$(printf "$BACKEND" | $DMENU_CMD -p "select a backend")
 SWALLOW=
 
 case $CHOICE in
-  $CHOICE) wal -i ~/Projects/awesome/AwesomeWM/wallpapers/$CHOICE.png --backend wal && convert ~/Projects/awesome/AwesomeWM/wallpapers/$CHOICE.png ~/custom.jpg && feh --bg-scale ~/custom.jpg && alacritty-color-export ;;
+  $CHOICE) wal -i ~/Projects/awesome/AwesomeWM/wallpapers/$CHOICE* --backend $BACKENDCHOICE && convert ~/Projects/awesome/AwesomeWM/wallpapers/$CHOICE* ~/custom.jpg && feh --bg-scale ~/custom.jpg && alacritty-color-export ;;
 
 esac
 
