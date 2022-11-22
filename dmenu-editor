@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+DMENU_CMD="dmenu -fn monospace:size=10 -nb #000000 -sb #d69922 -sf #000000"
+FILES="Awesome
+Alacritty
+Picom
+LunarVim
+Bashrc
+AwesomeTheme"
+FILECHOICE=$(printf "$FILES" | $DMENU_CMD -i -p "Open Config File:")
+SWALLOW=
+
+case $FILECHOICE in
+  Awesome) alacritty -e lvim ~/.config/awesome/rc.lua ;;
+  Alacritty) alacritty -e lvim ~/.config/alacritty/alacritty.yml ;;
+  Picom) alacritty -e lvim ~/config/picom.conf ;;
+  LunarVIM) alacritty -e lvim ~/config/lvim/config.lua ;;
+  Bashrc) alacritty -e lvim ~/.bashrc ;;
+  AwesomeTheme) alacritty -e lvim ~/Projects/shellscript/awesome-theme ;;
+
+esac
