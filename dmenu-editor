@@ -13,8 +13,8 @@ SWALLOW=
 case $FILECHOICE in
   Awesome) alacritty -e lvim ~/.config/awesome/rc.lua ;;
   Alacritty) alacritty -e lvim ~/.config/alacritty/alacritty.yml ;;
-  Picom) alacritty -e lvim ~/config/picom.conf ;;
-  LunarVIM) alacritty -e lvim ~/config/lvim/config.lua ;;
+  Picom) alacritty -e lvim ~/.config/picom.conf ;;
+  LunarVIM) alacritty -e lvim ~/.config/lvim/config.lua ;;
   Bashrc) alacritty -e lvim ~/.bashrc ;;
   AwesomeTheme) alacritty -e lvim ~/Projects/shellscript/awesome-theme ;;
 
