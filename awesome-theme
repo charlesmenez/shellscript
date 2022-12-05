@@ -2,14 +2,11 @@
 set -e
 DMENU_CMD="dmenu -nb black -nf white -sb white -sf black -fn hack:size=10 -i"
 THEME="space
-retro_future
-return-of-the-living-dead
-night-of-the-living-dead
-nature
 blossoming-almond-tree
 arco
 forest
 abstract
+gentoo-green
 "
 BACKEND="colorz
 wal
@@ -17,7 +14,7 @@ haishoku
 colorthief"
 
 CHOICE=$(printf "$THEME" | $DMENU_CMD -p "Select a theme")
-BACKENDCHOICE=$(printf "$BACKEND" | $DMENU_CMD -p "select a backend")
+BACKENDCHOICE=$(printf "$BACKEND" | $DMENU_CMD -p "Select a backend")
 SWALLOW=
 
 case $CHOICE in
