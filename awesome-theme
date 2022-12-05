@@ -1,19 +1,15 @@
 #!/bin/bash
 set -e
-DMENU_CMD="dmenu -nb black -nf white -sb yellow -sf black -fn hack:size=10"
-THEME="gruvbox
-sad
-bathroom
+DMENU_CMD="dmenu -nb black -nf white -sb white -sf black -fn hack:size=10 -i"
+THEME="space
+retro_future
+return-of-the-living-dead
+night-of-the-living-dead
+nature
+blossoming-almond-tree
+arco
 forest
-heaven
-house
-island
-paint
-8bit
-solarizedascii
-SolarizedBall
-SegaGenesis
-Space8bit
+abstract
 "
 BACKEND="colorz
 wal
@@ -25,7 +21,7 @@ BACKENDCHOICE=$(printf "$BACKEND" | $DMENU_CMD -p "select a backend")
 SWALLOW=
 
 case $CHOICE in
-  $CHOICE) wal -i ~/Projects/awesome/AwesomeWM/wallpapers/$CHOICE* --backend $BACKENDCHOICE && convert ~/Projects/awesome/AwesomeWM/wallpapers/$CHOICE* ~/custom.jpg && feh --bg-scale ~/custom.jpg && alacritty-xresources-color ;;
+  $CHOICE) wal -i ~/.config/awesome/wallpapers/$CHOICE* --backend $BACKENDCHOICE && convert ~/.config/awesome/wallpapers/$CHOICE* ~/custom.jpg && feh --bg-scale ~/custom.jpg && alacritty-xresources-color ;;
 
 esac
 
