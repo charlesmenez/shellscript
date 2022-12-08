@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #set dmenu theme
-DMENU_CMD="dmenu -fn monospace:size=8 -nb black -sb white -sf black"
+DMENU_CMD="dmenu -i"
 #input a movie variable
 search=$($DMENU_CMD -p "Search a movie" < /dev/null)
 

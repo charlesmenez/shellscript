@@ -1,0 +1,9 @@
+#!/bin/sh 
+
+EMOJI=$(cat ~/emoji | dmenu -i -fn noto:size=10 | awk '{print $1}')
+if [ -z "$EMOJI" ]; then
+  exit 0
+else
+  printf "$EMOJI" | xclip -selection clipboard
+  notify-send "'$EMOJI' copied to clipboard." &
+fi
