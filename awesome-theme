@@ -1,24 +1,37 @@
 #!/bin/bash
 set -e
-DMENU_CMD="dmenu -nb black -nf white -sb white -sf black -fn hack:size=10 -i"
-THEME="space
-blossoming-almond-tree
-arco
-forest
-abstract
+DMENU_CMD="dmenu -i"
+THEME="forest
 gentoo-green
+space
+abstract
+church
+modern
+ocean
+concrete
 "
-BACKEND="colorz
-wal
-haishoku
-colorthief"
+COLOR="Dark
+Light
+"
 
-CHOICE=$(printf "$THEME" | $DMENU_CMD -p "Select a theme")
-BACKENDCHOICE=$(printf "$BACKEND" | $DMENU_CMD -p "Select a backend")
+BACKEND="wal
+haishoku
+colorthief
+"
+
+CHOICE=$(printf "$THEME" | $DMENU_CMD -p "Select a theme:")
+COLORCHOICE=$(printf "$COLOR" | $DMENU_CMD -p "Select a color scheme:")
+BACKENDCHOICE=$(printf "$BACKEND" | $DMENU_CMD -p "Select a backend:")
 SWALLOW=
 
+if [ "$COLORCHOICE" == Light ]; then
+  COLORCHOICE="li"
+else
+  COLORCHOICE="i"
+fi
+
 case $CHOICE in
-  $CHOICE) wal -i ~/.config/awesome/wallpapers/$CHOICE* --backend $BACKENDCHOICE && convert ~/.config/awesome/wallpapers/$CHOICE* ~/custom.jpg && feh --bg-scale ~/custom.jpg && alacritty-xresources-color ;;
+  $CHOICE) wal -$COLORCHOICE ~/.config/awesome/wallpapers/$CHOICE* --backend $BACKENDCHOICE && convert ~/.config/awesome/wallpapers/$CHOICE* ~/custom.jpg && feh --bg-scale ~/custom.jpg && alacritty-xresources-color ;;
 
 esac
 
