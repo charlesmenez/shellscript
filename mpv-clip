@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+choice="Fullscreen
+Floating"
+select=$(printf "$choice" | dmenu -i -p "Select size:")
+if [ "$select" == Fullscreen ]; then
+  mpv --ytdl-format=bv*.3*+bestaudio/best --fullscreen $(xclip -o)
+else
+  mpv --ytdl-format=bv*.3*+bestaudio/best $(xclip -o)
+fi
+

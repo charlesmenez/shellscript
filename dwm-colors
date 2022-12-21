@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+WALLPAPER_PATH="/home/charles/Pictures/Wallpapers/"
+DMENU="$(ls $WALLPAPER_PATH | dmenu)"
+SELECTED="$WALLPAPER_PATH$DMENU"
+if [ -z "$DMENU"]; then
+	exit 0
+else
+	wal -i $SELECTED
+	sed -i ~/.Xresources -re '1,1000d'
+	cat ~/.cache/wal/colors.Xresources >> ~/.Xresources
+	pkill dwm
+fi
