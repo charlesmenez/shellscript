@@ -1,0 +1,6 @@
+#!/bin/sh 
+set -e
+BOOKMARKS=$(grep '.*' ~/bookmarks | dmenu -l 10 -p "select a site")
+BROWSER="firefox\nsurf"
+DMENU=$(printf $BROWSER | dmenu -i -p "choose the browser to open: ")
+OPENBROWSER=$($DMENU $BOOKMARKS)
