@@ -9,5 +9,6 @@ else
 	wal -i $SELECTED
 	sed -i ~/.Xresources -re '1,1000d'
 	cat ~/.cache/wal/colors.Xresources >> ~/.Xresources
+  wal-telegram -t
 	pkill dwm
 fi
