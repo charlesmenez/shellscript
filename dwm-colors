@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-WALLPAPER_PATH="/home/charles/Pictures/Wallpapers/"
+WALLPAPER_PATH="$HOME/Pictures/Wallpapers/"
 DMENU="$(ls $WALLPAPER_PATH | dmenu)"
 SELECTED="$WALLPAPER_PATH$DMENU"
 if [ -z "$DMENU"]; then
