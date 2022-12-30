@@ -42,21 +42,21 @@ for folder in $folders; do
     mkdir -p $HOME/.local/bin
     break
   fi
-  echo "Clone the repos"
-  sleep 1
-  #clone the repos
-  git clone https://github.com/charlesmenez/dwm $HOME/sourcecode/dwm
-  git clone https://github.com/charlesmenez/dwmblocks $HOME/sourcecode/dwmblocks
-  git clone https://github.com/charlesmenez/dmenu $HOME/sourcecode/dmenu
-  git clone https://github.com/charlesmenez/st $HOME/sourcecode/st
-  doas cp $HOME/sourcecode/dwmblocks/scripts/* /usr/local/bin/
-  #pull the script and making it executable
-  doas curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o /usr/local/bin/dwm-colors
-  doas chmod +x /usr/local/bin/dwm-colors
-  #downloading some wallpaper
-  curl -L https://raw.githubusercontent.com/charlesmenez/Wallpapers/main/black-forest.jpg -o $HOME/Wallpapers/black-forest.jpg
 done
 
+echo "Clone the repos"
+sleep 1
+#clone the repos
+git clone https://github.com/charlesmenez/dwm $HOME/sourcecode/dwm
+git clone https://github.com/charlesmenez/dwmblocks $HOME/sourcecode/dwmblocks
+git clone https://github.com/charlesmenez/dmenu $HOME/sourcecode/dmenu
+git clone https://github.com/charlesmenez/st $HOME/sourcecode/st
+doas cp $HOME/sourcecode/dwmblocks/scripts/* /usr/local/bin/
+#pull the script and making it executable
+doas curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o /usr/local/bin/dwm-colors
+doas chmod +x /usr/local/bin/dwm-colors
+#downloading some wallpaper
+curl -L https://raw.githubusercontent.com/charlesmenez/Wallpapers/main/black-forest.jpg -o $HOME/Wallpapers/black-forest.jpg
 sleep 1
 echo "checking if pywal it's installed, if not i'm install for you"
 sleep 1
