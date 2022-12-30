@@ -14,15 +14,11 @@ cp $HOME/sourcecode/dwmblocks/scripts/* $HOME/.local/bin/
 curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o $HOME/.local/bin/dwm-colors
 chmod +x $HOME/.local/bin/dwm-colors
 pip install pywal --user
-
+echo "export PATH='$PATH:~/.local/bin'" >> $HOME/.bash_profile
 if [ ! -f "$HOME/.Xresources" ]; then
   touch $HOME/.Xresources
 fi
 
-if [ ! -f "$HOME/.profile" ]; then
-  touch $HOME/.profile
-  echo "export PATH='$PATH:$HOME/.local/bin'" >> $HOME/.profile
-fi
 
 if [ -f "$HOME/.xinitrc" ]; then
   mv $HOME/.xinitrc .xinitrcbkp
