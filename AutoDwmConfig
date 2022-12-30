@@ -21,7 +21,7 @@ cat << "EOF"
 EOF
 
 echo "checking needed packages"
-apps="feh convert picom pip3"
+apps="feh convert picom pip3 git"
 folders="$HOME/sourcecode $HOME/Wallpapers $HOME/.local/bin"
 
 for app in $apps; do
@@ -53,6 +53,8 @@ for folder in $folders; do
   #pull the script and making it executable
   curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o $HOME/.local/bin/dwm-colors
   chmod +x $HOME/.local/bin/dwm-colors
+  #downloading some wallpaper
+  curl -L https://raw.githubusercontent.com/charlesmenez/Wallpapers/main/black-forest.jpg -o $HOME/Wallpapers/black-forest.jpg
 done
 
 sleep 1
@@ -72,6 +74,8 @@ else
   nv $HOME/.xinitrc $HOME/.xinitrcbkp
   mv $HOME/.Xresources $HOME/.Xresourcesbkp
 fi
+wal -i $HOME/Wallpapers/black-forest.jpg
+cat ~/.cache/wal/colors.Xresources >> $HOME/.Xresources
 
 doas make -C $HOME/sourcecode/st/ install
 doas make -C $HOME/sourcecode/dwmblocks/ install
