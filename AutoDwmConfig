@@ -51,8 +51,8 @@ for folder in $folders; do
   git clone https://github.com/charlesmenez/st $HOME/sourcecode/st
   doas cp $HOME/sourcecode/dwmblocks/scripts/* /usr/local/bin/
   #pull the script and making it executable
-  curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o $HOME/.local/bin/dwm-colors
-  chmod +x $HOME/.local/bin/dwm-colors
+  doas curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o /usr/local/bin/dwm-colors
+  doas chmod +x /usr/local/bin/dwm-colors
   #downloading some wallpaper
   curl -L https://raw.githubusercontent.com/charlesmenez/Wallpapers/main/black-forest.jpg -o $HOME/Wallpapers/black-forest.jpg
 done
@@ -66,7 +66,8 @@ if ! pip3 show pywal > /dev/null; then
 else
   echo "Congrats you have pywal, but make sure if it's in your PATH"
 fi
-ln -s ~/.local/bin/wal /usr/local/bin/
+
+doas ln -s ~/.local/bin/wal /usr/local/bin/
 
 if [ ! -f "$HOME/.Xresources $HOME/.xinitrc" ]; then
   touch $HOME/.Xresources
