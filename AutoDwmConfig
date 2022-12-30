@@ -34,3 +34,9 @@ if [ -f "$HOME/.xinitrc" ]; then
   mv $HOME/.xinitrc .xinitrcbkp
 fi
 curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/xinitrc -o $HOME/.xinitrc
+
+folders="$HOME/sourcecode/dwm $HOME/sourcecode/st $HOME/sourcecode/dwmblocks"
+for folder in $folders; do
+  cd "$folders"
+  doas make install
+done
