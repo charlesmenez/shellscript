@@ -17,9 +17,9 @@ cat << "EOF"
                 '---'              '---"     '---'           
 
                          Dwm Auto Install Script
-
+This script does work if you have doas with 'permit nopass :wheel' in doas.conf
 EOF
-
+sleep 2
 echo "checking needed packages"
 apps="feh convert picom pip3 git"
 folders="$HOME/sourcecode $HOME/Wallpapers $HOME/.local/bin"
