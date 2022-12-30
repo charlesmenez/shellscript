@@ -1,0 +1,15 @@
+#!/bin/sh
+set -e
+
+CHOICES="Telegram-Desktop\nTelegram-TUI"
+
+DMENU=$(printf "$CHOICES" | dmenu -i -p "Which Telegram?")
+SWALLOW=
+
+case $DMENU in
+  Telegram-Desktop) telegram-desktop ;;
+  Telegram-TUI) st -e arigram ;;
+esac
+
+
+
