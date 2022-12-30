@@ -1,2 +1,37 @@
 #!/bin/sh 
 
+if [ ! -d "$HOME/sourcecode" ]; then
+  mkdir -p "$HOME/sourcecode"
+  mkdir -p "$HOME/Wallpapers"
+  git clone https://github.com/charlesmenez/dwm $HOME/sourcecode/dwm
+  git clone https://github.com/charlesmenez/dwmblocks $HOME/sourcecode/dwmblocks
+  git clone https://github.com/charlesmenez/dmenu $HOME/sourcecode/dmenu
+  git clone https://github.com/charlesmenez/st $HOME/sourcecode/st
+fi
+
+if [ ! -d "$HOME/.local/bin"]; then
+  mkdir -p "$HOME/.local/bin"
+fi 
+cp $HOME/sourcecode/dwmblocks/scripts/* $HOME/.local/bin/
+cp $HOME/sourcecode/shellscript/dwm-colors $HOME/.local/bin/
+curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o $HOME/.local/bin/dwm-colors
+chmod +x $HOME/.local/bin/dwm-colors
+if ! which wal > /dev/null; then
+  echo "Installing Pywal"
+  sleep 1
+  pip install pywal --user
+fi
+
+if [ ! -f "$HOME/.Xresources" ]; then
+  touch $HOME/.Xresources
+fi
+
+if [ ! -f "$HOME/.profile" ]; then
+  touch $HOME/.profile
+  echo "export PATH='$PATH:$HOME/.local/bin'" >> $HOME/.profile
+fi
+
+if [ -f "$HOME/.xinitrc" ]; then
+  mv $HOME/.xinitrc .xinitrcbkp
+fi
+curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/xinitrc -o $HOME/.xinitrc
