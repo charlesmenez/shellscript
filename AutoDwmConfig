@@ -13,7 +13,6 @@ if [ ! -d "$HOME/.local/bin"]; then
   mkdir -p "$HOME/.local/bin"
 fi 
 cp $HOME/sourcecode/dwmblocks/scripts/* $HOME/.local/bin/
-cp $HOME/sourcecode/shellscript/dwm-colors $HOME/.local/bin/
 curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o $HOME/.local/bin/dwm-colors
 chmod +x $HOME/.local/bin/dwm-colors
 if ! which wal > /dev/null; then
