@@ -1,32 +1,79 @@
 #!/bin/sh 
+cat << "EOF"
+                                                              
+                                                       ____   
+                    ,---,               .---.        ,'  , `. 
+                  .'  .' `\            /. ./|     ,-+-,.' _ | 
+                ,---.'     \       .--'.  ' ;  ,-+-. ;   , || 
+                |   |  .`\  |     /__./ \ : | ,--.'|'   |  ;| 
+                :   : |  '  | .--'.  '   \' .|   |  ,', |  ': 
+                |   ' '  ;  :/___/ \ |    ' '|   | /  | |  || 
+                '   | ;  .  |;   \  \;      :'   | :  | :  |, 
+                |   | :  |  ' \   ;  `      |;   . |  ; |--'  
+                '   : | /  ;   .   \    .\  ;|   : |  | ,     
+                |   | '` ,/     \   \   ' \ ||   : '  |/      
+                ;   :  .'        :   '  |--" ;   | |`-'       
+                |   ,.'           \   \ ;    |   ;/           
+                '---'              '---"     '---'           
 
-if [ ! -d "$HOME/sourcecode" ]; then
-  mkdir -p "$HOME/sourcecode"
-  mkdir -p "$HOME/Wallpapers"
-  mkdir -p "$HOME/.local/bin"
+                         Dwm Auto Install Script
+
+EOF
+
+echo "checking needed packages"
+apps="feh convert picom pip3"
+folders="$HOME/sourcecode $HOME/Wallpapers $HOME/.local/bin"
+
+for app in $apps; do
+  if ! which $app > /dev/null; then
+    echo "$app isn't installed, please install"
+    sleep 4
+    exit 1
+  fi
+done
+
+sleep 1
+echo "Checking folders and creating it"
+
+for folder in $folders; do
+  if [ ! -d $folder ]; then
+    mkdir -p $HOME/sourcecode
+    mkdir -p $HOME/Wallpapers
+    mkdir -p $HOME/.local/bin
+    break
+  fi
+  echo "Clone the repos"
+  sleep 1
+  #clone the repos
   git clone https://github.com/charlesmenez/dwm $HOME/sourcecode/dwm
   git clone https://github.com/charlesmenez/dwmblocks $HOME/sourcecode/dwmblocks
   git clone https://github.com/charlesmenez/dmenu $HOME/sourcecode/dmenu
   git clone https://github.com/charlesmenez/st $HOME/sourcecode/st
+  cp $HOME/sourcecode/dwmblocks/scripts/* $HOME/.local/bin/
+  #pull the script and making it executable
+  curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o $HOME/.local/bin/dwm-colors
+  chmod +x $HOME/.local/bin/dwm-colors
+done
+
+sleep 1
+echo "checking if pywal it's installed, if not i'm install for you"
+sleep 1
+#check if pywal is installed
+if ! pip3 show pywal > /dev/null; then
+  pip install pywal --user
+else
+  echo "Congrats you have pywal, but make sure if it's in your PATH"
 fi
 
-cp $HOME/sourcecode/dwmblocks/scripts/* $HOME/.local/bin/
-curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o $HOME/.local/bin/dwm-colors
-chmod +x $HOME/.local/bin/dwm-colors
-pip install pywal --user
-echo "export PATH='$PATH:~/.local/bin'" >> $HOME/.bash_profile
-if [ ! -f "$HOME/.Xresources" ]; then
+if [ ! -f "$HOME/.Xresources $HOME/.xinitrc" ]; then
   touch $HOME/.Xresources
+  curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/xinitrc -o $HOME/.xinitrc
+else
+  nv $HOME/.xinitrc $HOME/.xinitrcbkp
+  mv $HOME/.Xresources $HOME/.Xresourcesbkp
 fi
 
-
-if [ -f "$HOME/.xinitrc" ]; then
-  mv $HOME/.xinitrc .xinitrcbkp
-fi
-curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/xinitrc -o $HOME/.xinitrc
-
-folders="$HOME/sourcecode/dwm $HOME/sourcecode/dmenu $HOME/sourcecode/st $HOME/sourcecode/dwmblocks"
 doas make -C $HOME/sourcecode/st/ install
-doas make -C $HOME/sourcecode/dwmblocks// install
+doas make -C $HOME/sourcecode/dwmblocks/ install
 doas make -C $HOME/sourcecode/dwm/ install
 
