@@ -26,7 +26,7 @@ fi
 curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/xinitrc -o $HOME/.xinitrc
 
 folders="$HOME/sourcecode/dwm $HOME/sourcecode/dmenu $HOME/sourcecode/st $HOME/sourcecode/dwmblocks"
-for folder in $folders; do
-  cd "$folders"
-  doas make install
-done
+doas make -C $HOME/sourcecode/st/ install
+doas make -C $HOME/sourcecode/dwmblocks// install
+doas make -C $HOME/sourcecode/dwm/ install
+
