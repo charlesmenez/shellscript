@@ -56,7 +56,7 @@ doas cp $HOME/sourcecode/dwmblocks/scripts/* /usr/local/bin/
 doas curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o /usr/local/bin/dwm-colors
 doas chmod +x /usr/local/bin/dwm-colors
 #downloading some wallpaper
-curl -L https://raw.githubusercontent.com/charlesmenez/Wallpapers/main/black-forest.jpg -o $HOME/Wallpapers/black-forest.jpg
+curl -L https://raw.githubusercontent.com/charlesmenez/Wallpapers/main/dwm.png -o $HOME/Wallpapers/dwm.png
 sleep 1
 echo "checking if pywal it's installed, if not i'm install for you"
 sleep 1
@@ -76,7 +76,7 @@ else
   nv $HOME/.xinitrc $HOME/.xinitrcbkp
   mv $HOME/.Xresources $HOME/.Xresourcesbkp
 fi
-wal -i $HOME/Wallpapers/black-forest.jpg
+wal -i $HOME/Wallpapers/dwm.png
 cat ~/.cache/wal/colors.Xresources >> $HOME/.Xresources
 
 doas make -C $HOME/sourcecode/st/ install
