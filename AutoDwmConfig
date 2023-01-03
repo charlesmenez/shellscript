@@ -17,20 +17,22 @@ cat << "EOF"
                 '---'              '---"     '---'           
 
                          Dwm Auto Install Script
-This script does work if you have doas with 'permit nopass :wheel' in doas.conf
+                  This script does work if you have doas
 EOF
 sleep 2
-echo "checking needed packages"
-apps="feh convert picom pip3 git ssh setxkbmap"
 folders="$HOME/sourcecode $HOME/Wallpapers $HOME/.local/bin"
-
-for app in $apps; do
-  if ! which $app > /dev/null; then
-    echo "$app isn't installed, please install"
-    sleep 4
-    exit 1
-  fi
-done
+echo "checking and installing needed packages"
+distro=$(uname -a | awk '{print $2}')
+if [ "$distro" == "archlinux" ]; then
+doas pacman -S noto-fonts-emoji git feh picom imagemagick python-pip openssh ttf-iosevka-nerd
+elif [ "$distro" == "gentoo" ]; then
+doas emerge --ask media-fonts/noto-emoji app-admin/doas dev-vcs/git media-gfx/imagemagick media-gfx/feh x11-misc/picom net-misc/openssh 
+else
+  echo "your distro isn't compatible"
+  sleep 1
+  exit 1
+fi
+  
 
 sleep 1
 echo "Checking folders and creating it"
@@ -72,9 +74,11 @@ doas ln -s ~/.local/bin/wal /usr/local/bin/
 if [ ! -f "$HOME/.Xresources $HOME/.xinitrc" ]; then
   touch $HOME/.Xresources
   curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/xinitrc -o $HOME/.xinitrc
-else
+elif [ -f "$HOME/.Xresources $HOME/.xinitrc"]; then
   nv $HOME/.xinitrc $HOME/.xinitrcbkp
   mv $HOME/.Xresources $HOME/.Xresourcesbkp
+  touch $HOME/.Xresources
+  curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/xinitrc -o $HOME/.xinitrc
 fi
 wal -i $HOME/Wallpapers/dwm.png
 cat ~/.cache/wal/colors.Xresources >> $HOME/.Xresources
