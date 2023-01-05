@@ -36,9 +36,9 @@ done
 for packagemanager in $packagemanagers; do
   if command -v "$packagemanager" > /dev/null 2>&1;then
     case "$packagemanager" in
-      pacman) $roots pacman -S noto-fonts-emoji git feh picom imagemagick python-pip openssh ttf-iosevka-nerd yt-dlp ;;
-      emerge) $roots emerge --ask media-fonts/noto-emoji dev-vcs/git media-gfx/imagemagick media-gfx/feh x11-misc/picom net-misc/openssh net-misc/yt-dlp ;;
-      xbps-install) $roots xbps-install -S git base-devel feh picom ImageMagick noto-fonts-emoji font-iosevka python3-pip curl libXinerama-devel fontconfig-devel libXft-devel harfbuzz-devel yt-dlp ytcc ;;
+      pacman) $roots pacman -S noto-fonts-emoji git feh picom imagemagick python-pip openssh ttf-iosevka-nerd yt-dlp ranger ;;
+      emerge) $roots emerge --ask media-fonts/noto-emoji dev-vcs/git media-gfx/imagemagick media-gfx/feh x11-misc/picom net-misc/openssh net-misc/yt-dlp ranger ;;
+      xbps-install) $roots xbps-install -S git base-devel feh picom ImageMagick noto-fonts-emoji font-iosevka python3-pip curl libXinerama-devel fontconfig-devel libXft-devel harfbuzz-devel yt-dlp ytcc ranger ;;
     esac
     break
   fi
