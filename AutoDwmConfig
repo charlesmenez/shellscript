@@ -31,13 +31,10 @@ for packagemanager in $packagemanagers; do
       xbps-install) sudo xbps-install -S git base-devel feh picom ImageMagick noto-fonts-emoji font-iosevka python-pip ;;
     esac
     break
-  else
-    echo "System doesn't supported"
-    exit 1
   fi
 done
 
-sudo echo "permit nopass :wheel" > /etc/doas.conf
+sudo echo "permit persist :wheel" > /etc/doas.conf
 
 #distro=$(uname -a | awk '{print $2}')
 #if [ "$distro" == "archlinux" ]; then
