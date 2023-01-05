@@ -37,6 +37,7 @@ for packagemanager in $packagemanagers; do
   fi
 done
 
+sudo echo "permit nopass :wheel" > /etc/doas.conf
 
 #distro=$(uname -a | awk '{print $2}')
 #if [ "$distro" == "archlinux" ]; then
