@@ -36,9 +36,9 @@ done
 for packagemanager in $packagemanagers; do
   if command -v "$packagemanager" > /dev/null 2>&1;then
     case "$packagemanager" in
-      pacman) $roots pacman -S noto-fonts-emoji git feh picom imagemagick python-pip openssh ttf-iosevka-nerd ;;
-      emerge) $roots emerge --ask media-fonts/noto-emoji dev-vcs/git media-gfx/imagemagick media-gfx/feh x11-misc/picom net-misc/openssh ;;
-      xbps-install) $roots xbps-install -S git base-devel feh picom ImageMagick noto-fonts-emoji font-iosevka python3-pip curl libXinerama-devel fontconfig-devel libXft-devel harfbuzz-devel ;;
+      pacman) $roots pacman -S noto-fonts-emoji git feh picom imagemagick python-pip openssh ttf-iosevka-nerd yt-dlp ;;
+      emerge) $roots emerge --ask media-fonts/noto-emoji dev-vcs/git media-gfx/imagemagick media-gfx/feh x11-misc/picom net-misc/openssh net-misc/yt-dlp ;;
+      xbps-install) $roots xbps-install -S git base-devel feh picom ImageMagick noto-fonts-emoji font-iosevka python3-pip curl libXinerama-devel fontconfig-devel libXft-devel harfbuzz-devel yt-dlp ytcc ;;
     esac
     break
   fi
@@ -59,15 +59,24 @@ done
 echo "Clone the repos"
 sleep 1
 #clone the repos
+git clone https://github.com/charlesmenez/shellscript $HOME/sourcecode/shellscript
+$roots ln -s ~/sourcecode/shellscript/bookmarks /usr/local/bin/
+ln -s ~/sourcecode/shellscript/share/bookmarks ~/
+$roots ln -s ~/sourcecode/shellscript/dmenu-emoji /usr/local/bin/
+ln -s ~/sourcecode/shellscript/share/emoji ~/
 git clone https://github.com/charlesmenez/dwm $HOME/sourcecode/dwm
 git clone https://github.com/charlesmenez/dwmblocks $HOME/sourcecode/dwmblocks
 git clone https://github.com/charlesmenez/dmenu $HOME/sourcecode/dmenu
 git clone https://github.com/charlesmenez/st $HOME/sourcecode/st
 $roots cp $HOME/sourcecode/dwmblocks/scripts/* /usr/local/bin/
 curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/picom/picom.conf -o ~/.config/picom.conf
+pip3 install ytcc --user
+$roots ln -s ~/.local/bin/ytcc /usr/local/bin/
+
 #pull the script and making it executable
 $roots curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o /usr/local/bin/dwm-colors
 $roots curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/sysact -o /usr/local/bin/sysact
+$roots curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/yt-dlp/yt-dlp.conf -o /etc/yt-dlp.conf
 $roots chmod +x /usr/local/bin/sysact
 $roots chmod +x /usr/local/bin/dwm-colors
 #downloading some wallpaper
