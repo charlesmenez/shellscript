@@ -64,8 +64,11 @@ git clone https://github.com/charlesmenez/dwmblocks $HOME/sourcecode/dwmblocks
 git clone https://github.com/charlesmenez/dmenu $HOME/sourcecode/dmenu
 git clone https://github.com/charlesmenez/st $HOME/sourcecode/st
 $roots cp $HOME/sourcecode/dwmblocks/scripts/* /usr/local/bin/
+curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/picom/picom.conf -o ~/.config/picom.conf
 #pull the script and making it executable
 $roots curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o /usr/local/bin/dwm-colors
+$roots curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/sysact -o /usr/local/bin/sysact
+$roots chmod +x /usr/local/bin/sysact
 $roots chmod +x /usr/local/bin/dwm-colors
 #downloading some wallpaper
 curl -L https://raw.githubusercontent.com/charlesmenez/Wallpapers/main/dwm.png -o $HOME/Wallpapers/dwm.png
