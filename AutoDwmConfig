@@ -17,21 +17,39 @@ cat << "EOF"
                 '---'              '---"     '---'           
 
                          Dwm Auto Install Script
-                  This script does work if you have doas
 EOF
 sleep 2
 folders="$HOME/sourcecode $HOME/Wallpapers $HOME/.local/bin"
 echo "checking and installing needed packages"
-distro=$(uname -a | awk '{print $2}')
-if [ "$distro" == "archlinux" ]; then
-doas pacman -S noto-fonts-emoji git feh picom imagemagick python-pip openssh ttf-iosevka-nerd
-elif [ "$distro" == "gentoo" ]; then
-doas emerge --ask media-fonts/noto-emoji app-admin/doas dev-vcs/git media-gfx/imagemagick media-gfx/feh x11-misc/picom net-misc/openssh 
-else
-  echo "your distro isn't compatible"
-  sleep 1
-  exit 1
-fi
+packagemanagers="pacman emerge xbps-install"
+
+for packagemanager in $packagemanagers; do
+  if command -v "$packagemanager" > /dev/null 2>&1;then
+    case "$packagemanager" in
+      pacman) sudo pacman -S noto-fonts-emoji git feh picom imagemagick python-pip openssh ttf-iosevka-nerd opendoas ;;
+      emerge) doas emerge --ask media-fonts/noto-emoji app-admin/doas dev-vcs/git media-gfx/imagemagick media-gfx/feh x11-misc/picom net-misc/openssh ;;
+      xbps-install) sudo xbps-install -S git base-devel feh picom ImageMagick noto-fonts-emoji font-iosevka python-pip ;;
+    esac
+    break
+  else
+    echo "System doesn't supported"
+    exit 1
+  fi
+done
+
+
+#distro=$(uname -a | awk '{print $2}')
+#if [ "$distro" == "archlinux" ]; then
+#doas pacman -S noto-fonts-emoji git feh picom imagemagick python-pip openssh ttf-iosevka-nerd
+#elif [ "$distro" == "gentoo" ]; then
+#doas emerge --ask media-fonts/noto-emoji app-admin/doas dev-vcs/git media-gfx/imagemagick media-gfx/feh x11-misc/picom net-misc/openssh 
+#elif [ "$distro" == "voidlinux" ]; then
+#doas emerge --ask media-fonts/noto-emoji app-admin/doas dev-vcs/git media-gfx/imagemagick media-gfx/feh x11-misc/picom net-misc/openssh 
+#else
+#  echo "your distro it isn't compatible"
+#  sleep 1
+#  exit 1
+#fi
   
 
 sleep 1
