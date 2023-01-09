@@ -36,8 +36,3 @@ elif [ -n "$magnetlink" ]; then
     notify-send "$format adicionado para download"
   fi
 fi
-
-#st -e peerflix $magnetlink -n -l -k --path ~/MassStorage/Movies
-#transmission-remote -a "$magnetlink" -w ~/
-#st -e webtorrent "$magnetlink" --mpv --no-quit
-#st -e torrent-tui

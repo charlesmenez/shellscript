@@ -7,7 +7,7 @@ if [ -z "$DMENU"]; then
 	exit 0
 else
 	wal -i $SELECTED
-	sed -i ~/.Xresources -re '1,1000d'
+  truncate --size 0 $HOME/.Xresources
 	cat ~/.cache/wal/colors.Xresources >> ~/.Xresources
   wal-telegram -t
 	pkill dwm
