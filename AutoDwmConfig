@@ -101,7 +101,7 @@ elif [ -f "$HOME/.Xresources $HOME/.xinitrc"]; then
   touch $HOME/.Xresources
   curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/xinitrc -o $HOME/.xinitrc
 fi
-wal -i $HOME/Wallpapers/dwm.png
+wal -i $HOME/Wallpapers/minimal.png
 cat ~/.cache/wal/colors.Xresources >> $HOME/.Xresources
 
 $roots make -C $HOME/sourcecode/st/ install
