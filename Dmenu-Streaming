@@ -7,9 +7,6 @@ query=$(printf "$search" | tr ' ' '+' )
 #if statement to see if search variable is NULL
 if [ -z "$search" ]; then
   exit 0
-elif [ $site == "RARBG" ]; then
-  site="https://www1.rarbggo.to/search/?search=$query"
-  magnet="https://www1.rarbggo.to/"
 elif [ $site == "1337X" ]; then
   site="https://1337x.to/search/$query/1/"
   magnet="https://1337x.to/"
