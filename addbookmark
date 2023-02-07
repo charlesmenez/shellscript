@@ -1,0 +1,4 @@
+#!/bin/sh
+CLIP=$(xclip -o)
+echo "$CLIP" | tee -a $HOME/bookmarks
+notify-send "$CLIP added to bookmarks"

@@ -66,7 +66,7 @@ $roots ln -s ~/sourcecode/shellscript/bookmarks /usr/local/bin/
 ln -s ~/sourcecode/shellscript/share/bookmarks ~/
 $roots ln -s ~/sourcecode/shellscript/dmenu-emoji /usr/local/bin/
 ln -s ~/sourcecode/shellscript/share/emoji ~/
-git clone https://github.com/charlesmenez/dwm $HOME/sourcecode/dwm
+git clone https://github.com/charlesmenez/dwmbuild $HOME/sourcecode/dwm
 git clone https://github.com/charlesmenez/dwmblocks $HOME/sourcecode/dwmblocks
 git clone https://github.com/charlesmenez/dmenu $HOME/sourcecode/dmenu
 git clone https://github.com/charlesmenez/st $HOME/sourcecode/st
