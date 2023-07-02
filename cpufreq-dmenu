@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Define the options
+options=("powersave" "web" "compiling")
+
+# Prompt the user to select an option using dmenu
+selected_option=$(printf '%s\n' "${options[@]}" | dmenu -p "select a profile")
+
+# Handle the selected option
+case $selected_option in
+    "powersave")
+        doas cpupower frequency-set -u 1.4ghz;;
+    "web")
+        doas cpupower frequency-set -u 2.4ghz;;
+    "compiling")
+        doas cpupower frequency-set -u 3.4ghz;;
+esac
+
