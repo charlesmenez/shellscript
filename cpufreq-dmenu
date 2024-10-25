@@ -8,11 +8,11 @@ selected_option=$(printf '%s\n' "${options[@]}" | dmenu -p "select a profile")
 
 # Handle the selected option
 case $selected_option in
-    "powersave")
-        doas cpupower frequency-set -u 1.4ghz;;
+    "gaming")
+        doas cpupower frequency-set -u 3.0ghz;;
     "web")
         doas cpupower frequency-set -u 2.4ghz;;
     "compiling")
-        doas cpupower frequency-set -u 3.4ghz;;
+        doas cpupower frequency-set -u 4.3ghz;;
 esac
 
