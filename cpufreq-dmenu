@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the options
-options=("powersave" "web" "compiling")
+options=("gaming" "web" "compiling")
 
 # Prompt the user to select an option using dmenu
 selected_option=$(printf '%s\n' "${options[@]}" | dmenu -p "select a profile")
