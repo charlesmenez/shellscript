@@ -1,43 +1,20 @@
 #!/bin/bash
-set -e
-DMENU_CMD="dmenu -i"
-THEME="forest
-gentoo-green
-space
-abstract
-church
-modern
-ocean
-concrete
-"
-COLOR="Dark
-Light
-"
-
-BACKEND="wal
-haishoku
-colorthief
-"
-
-CHOICE=$(printf "$THEME" | $DMENU_CMD -p "Select a theme:")
-COLORCHOICE=$(printf "$COLOR" | $DMENU_CMD -p "Select a color scheme:")
-BACKENDCHOICE=$(printf "$BACKEND" | $DMENU_CMD -p "Select a backend:")
-SWALLOW=
-
-if [ "$COLORCHOICE" == Light ]; then
-  COLORCHOICE="li"
-else
-  COLORCHOICE="i"
-fi
+#set -e
+#DMENU_CMD="dmenu -i"
+#THEME="forest
+#gentoo-green
+#space
+#abstract
+#church
+#modern
+#ocean
+#concrete
+#"
+#CHOICE=$(printf "$THEME" | $DMENU_CMD -p "Select a theme:")
+CHOICE=$(ls -1 ~/.config/awesome/wallpapers/ | dmenu -i -l 10)
 
 case $CHOICE in
-  $CHOICE) wal -$COLORCHOICE ~/.config/awesome/wallpapers/$CHOICE* --backend $BACKENDCHOICE && convert ~/.config/awesome/wallpapers/$CHOICE* ~/custom.jpg && feh --bg-scale ~/custom.jpg && wal-telegram -t && picom update && awesome-client 'awesome.restart()' ;;
+  $CHOICE) wal -i ~/.config/awesome/wallpapers/$CHOICE && convert ~/.config/awesome/wallpapers/$CHOICE* ~/custom.jpg && awesome-client 'awesome.restart()' ;;
 
 esac
 
-
-if [ -z "$CHOICE" ]; then
-  exit 1
-else
-  echo 'awesome.restart()' | awesome-client
-fi
