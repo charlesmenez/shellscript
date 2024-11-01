@@ -31,7 +31,7 @@ else
 fi
 
 case $CHOICE in
-  $CHOICE) wal -$COLORCHOICE ~/.config/awesome/wallpapers/$CHOICE* --backend $BACKENDCHOICE && convert ~/.config/awesome/wallpapers/$CHOICE* ~/custom.jpg && feh --bg-scale ~/custom.jpg && wal-telegram -t && picom update ;;
+  $CHOICE) wal -$COLORCHOICE ~/.config/awesome/wallpapers/$CHOICE* --backend $BACKENDCHOICE && convert ~/.config/awesome/wallpapers/$CHOICE* ~/custom.jpg && feh --bg-scale ~/custom.jpg && wal-telegram -t && picom update && awesome-client 'awesome.restart()' ;;
 
 esac
 
