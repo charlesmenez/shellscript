@@ -21,7 +21,9 @@ if [ -z "$magnetlink" ]; then
 elif [ -n "$magnetlink" ]; then
   choices=$(printf "Watch\nDownload" | dmenu -i -p 'What to do? ')
   if [ $choices == "Watch" ]; then
-    st -e webtorrent "$magnetlink" --mpv --no-quit
+    st -e webtorrent "$magnetlink" --vlc --no-quit &
+    sleep 10
+    st -e subliminal download -p opensubtitles -l pt-BR /tmp/webtorrent/ &
   else
     format=$(printf "$query" | tr '+' ' ') 
     transmission-remote -a "$magnetlink" -w ~/
