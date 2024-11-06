@@ -72,8 +72,6 @@ git clone https://github.com/charlesmenez/dwmblocks $HOME/sourcecode/dwmblocks
 git clone https://github.com/charlesmenez/dmenu $HOME/sourcecode/dmenu
 git clone https://github.com/charlesmenez/st $HOME/sourcecode/st
 $roots cp $HOME/sourcecode/dwmblocks/scripts/* /usr/local/bin/
-pip3 install ytcc --user
-$roots ln -s ~/.local/bin/ytcc /usr/local/bin/
 
 #pull the script and making it executable
 $roots curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o /usr/local/bin/dwm-colors
