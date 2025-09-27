@@ -1,4 +1,14 @@
-#!/bin/sh 
+#!/bin/sh
+# Dwm Auto Install Script (improved)
+# - safer root handling (sudo/doas or run as root)
+# - resilient package manager detection
+# - idempotent repo clone/update and symlinks
+# - fixed broken conditionals and typos
+# - consistent paths and error handling
+# - avoids using sudo directly when doas is used
+
+set -eu
+
 cat << "EOF"
                                                               
                                                        ____   
@@ -14,98 +24,161 @@ cat << "EOF"
                 |   | '` ,/     \   \   ' \ ||   : '  |/      
                 ;   :  .'        :   '  |--" ;   | |`-'       
                 |   ,.'           \   \ ;    |   ;/           
-                '---'              '---"     '---'           
+                '---'              '---"     '---'            
 
                          Dwm Auto Install Script
 EOF
-sleep 2
-folders="$HOME/sourcecode $HOME/.local/bin"
-echo "checking and installing needed packages"
-packagemanagers="pacman emerge xbps-install"
-roots="sudo doas"
-for root in $roots; do
-  if command -v "$root" > /dev/null 2>&1; then
-    case "$root" in
-      sudo) roots="sudo" ;;
-      doas) roots="doas" ;;
-    esac
+
+log() { printf '%s\n' "[$(date +%H:%M:%S)] $*"; }
+
+# Determine root wrapper (sudo/doas) or none if already root
+SUDO=""
+if [ "$(id -u)" -ne 0 ]; then
+  if command -v sudo >/dev/null 2>&1; then
+    SUDO="sudo"
+  elif command -v doas >/dev/null 2>&1; then
+    SUDO="doas"
+  else
+    log "This script needs root privileges to install system files. Install sudo or doas, or re-run as root."
+    exit 1
+  fi
+fi
+
+sleep 1
+log "Checking and installing needed packages"
+
+# Detect package manager
+PM=""
+for pm in pacman emerge xbps-install; do
+  if command -v "$pm" >/dev/null 2>&1; then
+    PM="$pm"
     break
   fi
 done
 
-for packagemanager in $packagemanagers; do
-  if command -v "$packagemanager" > /dev/null 2>&1;then
-    case "$packagemanager" in
-      pacman) $roots pacman -S libxft ttf-sourcecodepro-nerd meson acpi uthash noto-fonts-emoji git feh picom imagemagick python-pipx openssh ttf-iosevka-nerd yt-dlp ranger zip ;;
-      emerge) $roots emerge --ask media-fonts/noto-emoji acpi dev-util/meson dev-libs/uthash dev-vcs/git media-gfx/imagemagick media-gfx/feh x11-misc/picom net-misc/openssh net-misc/yt-dlp ranger app-arch/zip ;;
-      xbps-install) $roots xbps-install -S xrdb git base-devel feh picom ImageMagick noto-fonts-emoji font-iosevka python3-pip curl libXinerama-devel fontconfig-devel libXft-devel harfbuzz-devel yt-dlp ytcc ranger zip ;;
-    esac
-    break
-  fi
-done
-
-sleep 1
-echo "Checking folders and creating it"
-
-for folder in $folders; do
-  if [ ! -d $folder ]; then
-    mkdir -p $HOME/sourcecode
-    mkdir -p $HOME/.local/bin
-    break
-  fi
-done
-
-echo "Clone the repos"
-sleep 1
-#clone the repos
-git clone https://github.com/yshui/picom $HOME/picom && cd picom && meson setup --buildtype=release build && sudo ninja -C build install && cd ..
-git clone https://github.com/charlesmenez/Wallpapers $HOME/Wallpapers
-git clone https://github.com/guillaumeboehm/wal-telegram $HOME/sourcecode/wal-telegram
-$roots make -C $HOME/sourcecode/wal-telegram/ install
-git clone https://github.com/charlesmenez/shellscript $HOME/sourcecode/shellscript
-$roots ln -s ~/sourcecode/shellscript/bookmarks /usr/local/bin/
-ln -s ~/sourcecode/shellscript/share/bookmarks ~/
-$roots ln -s ~/sourcecode/shellscript/dmenu-emoji /usr/local/bin/
-ln -s ~/sourcecode/shellscript/share/emoji ~/
-git clone https://github.com/charlesmenez/dwm $HOME/sourcecode/dwm
-git clone https://github.com/charlesmenez/dwmblocks $HOME/sourcecode/dwmblocks
-git clone https://github.com/charlesmenez/dmenu $HOME/sourcecode/dmenu
-git clone https://github.com/charlesmenez/st $HOME/sourcecode/st
-$roots cp $HOME/sourcecode/dwmblocks/scripts/* /usr/local/bin/
-
-#pull the script and making it executable
-$roots curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o /usr/local/bin/dwm-colors
-$roots curl -L https://raw.githubusercontent.com/charlesmenez/shellscript/main/sysact -o /usr/local/bin/sysact
-$roots curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/yt-dlp/yt-dlp.conf -o /etc/yt-dlp.conf
-curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/picom/picom.conf -o ~/.config/picom.conf
-$roots chmod +x /usr/local/bin/sysact
-$roots chmod +x /usr/local/bin/dwm-colors
-sleep 1
-echo "checking if pywal it's installed, if not i'm install for you"
-sleep 1
-#check if pywal is installed
-if ! pip3 show pywal > /dev/null; then
-  pip install pywal --user
+if [ -z "$PM" ]; then
+  log "No supported package manager found (supported: pacman, emerge, xbps-install). Skipping package installation."
 else
-  echo "Congrats you have pywal, but make sure if it's in your PATH"
+  case "$PM" in
+    pacman)
+      # Update and install packages (non-interactive, only if needed)
+      $SUDO pacman -Sy --noconfirm --needed \
+        libxft ttf-sourcecodepro-nerd ttf-iosevka-nerd \
+        meson ninja acpi uthash noto-fonts-emoji git feh picom imagemagick \
+        python-pip curl openssh yt-dlp ranger zip
+      ;;
+    emerge)
+      # Keep interactive as per Gentoo workflows
+      $SUDO emerge --ask \
+        dev-vcs/git net-misc/openssh app-arch/zip media-gfx/imagemagick \
+        media-gfx/feh x11-misc/picom sys-power/acpi dev-libs/uthash \
+        dev-util/meson dev-util/ninja media-fonts/noto-emoji net-misc/yt-dlp \
+        app-misc/ranger
+      ;;
+    xbps-install)
+      # Void Linux - sync and install build/runtime deps
+      $SUDO xbps-install -Sy \
+        git curl feh picom ImageMagick xrdb python3-pip \
+        libXinerama-devel fontconfig-devel libXft-devel harfbuzz-devel \
+        make gcc pkg-config ninja noto-fonts-emoji font-iosevka \
+        openssh yt-dlp ranger zip
+      ;;
+  esac
 fi
 
-$roots ln -s ~/.local/bin/wal /usr/local/bin/
+sleep 1
+log "Ensuring required directories exist"
+mkdir -p "$HOME/sourcecode" "$HOME/.local/bin" "$HOME/.config/picom"
 
-if [ ! -f "$HOME/.Xresources $HOME/.xinitrc" ]; then
-  touch $HOME/.Xresources
-  curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/xinitrc -o $HOME/.xinitrc
-elif [ -f "$HOME/.Xresources $HOME/.xinitrc"]; then
-  nv $HOME/.xinitrc $HOME/.xinitrcbkp
-  mv $HOME/.Xresources $HOME/.Xresourcesbkp
-  touch $HOME/.Xresources
-  curl -L https://raw.githubusercontent.com/charlesmenez/dotfiles/main/xinitrc -o $HOME/.xinitrc
+clone_or_update() {
+  repo="$1"
+  dest="$2"
+  if [ -d "$dest/.git" ]; then
+    log "Updating $(basename "$dest")"
+    git -C "$dest" pull --ff-only
+  elif [ -e "$dest" ]; then
+    log "Skipping $dest (exists but not a git repository)"
+  else
+    log "Cloning $(basename "$dest")"
+    git clone "$repo" "$dest"
+  fi
+}
+
+log "Clone or update repositories"
+# picom build from source (install to system)
+clone_or_update https://github.com/yshui/picom "$HOME/sourcecode/picom"
+(
+  cd "$HOME/sourcecode/picom"
+  meson setup --buildtype=release build 2>/dev/null || true
+  ninja -C build
+  $SUDO ninja -C build install
+)
+
+clone_or_update https://github.com/charlesmenez/Wallpapers "$HOME/Wallpapers"
+clone_or_update https://github.com/guillaumeboehm/wal-telegram "$HOME/sourcecode/wal-telegram"
+$SUDO make -C "$HOME/sourcecode/wal-telegram" install
+clone_or_update https://github.com/charlesmenez/shellscript "$HOME/sourcecode/shellscript"
+clone_or_update https://github.com/charlesmenez/dwm "$HOME/sourcecode/dwm"
+clone_or_update https://github.com/charlesmenez/dwmblocks "$HOME/sourcecode/dwmblocks"
+clone_or_update https://github.com/charlesmenez/dmenu "$HOME/sourcecode/dmenu"
+clone_or_update https://github.com/charlesmenez/st "$HOME/sourcecode/st"
+
+log "Installing helper scripts and symlinks"
+# Ensure /usr/local/bin exists
+$SUDO install -d -m 755 /usr/local/bin
+
+# dwnblocks helper scripts
+$SUDO cp -f "$HOME/sourcecode/dwmblocks/scripts/"* /usr/local/bin/
+
+# Symlinks to this repo's helpers
+$SUDO ln -sf "$HOME/sourcecode/shellscript/bookmarks" /usr/local/bin/bookmarks
+ln -snf "$HOME/sourcecode/shellscript/share/bookmarks" "$HOME/bookmarks"
+$SUDO ln -sf "$HOME/sourcecode/shellscript/dmenu-emoji" /usr/local/bin/dmenu-emoji
+ln -snf "$HOME/sourcecode/shellscript/share/emoji" "$HOME/emoji"
+
+# Pull remote scripts
+$SUDO curl -fsSL https://raw.githubusercontent.com/charlesmenez/shellscript/main/dwm-colors -o /usr/local/bin/dwm-colors
+$SUDO curl -fsSL https://raw.githubusercontent.com/charlesmenez/shellscript/main/sysact -o /usr/local/bin/sysact
+$SUDO chmod +x /usr/local/bin/dwm-colors /usr/local/bin/sysact
+
+# yt-dlp config
+$SUDO curl -fsSL https://raw.githubusercontent.com/charlesmenez/dotfiles/main/yt-dlp/yt-dlp.conf -o /etc/yt-dlp.conf
+
+# picom config
+curl -fsSL https://raw.githubusercontent.com/charlesmenez/dotfiles/main/picom/picom.conf -o "$HOME/.config/picom/picom.conf"
+
+log "Ensuring pywal is installed"
+if ! python3 -m pip show pywal >/dev/null 2>&1; then
+  python3 -m pip install --user --upgrade pywal
+else
+  log "pywal already present"
 fi
-wal -i $HOME/Wallpapers/minimal.png
-cat ~/.cache/wal/colors.Xresources >> $HOME/.Xresources
 
-$roots make -C $HOME/sourcecode/st/ install
-$roots make -C $HOME/sourcecode/dwmblocks/ install
-$roots make -C $HOME/sourcecode/dwm/ install
-$roots make -C $HOME/sourcecode/dmenu/ install
+# Make wal available system-wide when installed for the user
+if [ -x "$HOME/.local/bin/wal" ]; then
+  $SUDO ln -sf "$HOME/.local/bin/wal" /usr/local/bin/wal
+fi
 
+log "Configuring Xresources and xinitrc"
+[ -f "$HOME/.Xresources" ] || touch "$HOME/.Xresources"
+# Backup existing .xinitrc if present, then fetch a fresh one
+if [ -f "$HOME/.xinitrc" ]; then
+  cp "$HOME/.xinitrc" "$HOME/.xinitrc.bak.$(date +%s)"
+fi
+curl -fsSL https://raw.githubusercontent.com/charlesmenez/dotfiles/main/xinitrc -o "$HOME/.xinitrc"
+
+# Seed colors using wal if wallpaper exists
+if [ -x "$HOME/.local/bin/wal" ] && [ -f "$HOME/Wallpapers/minimal.png" ]; then
+  "$HOME/.local/bin/wal" -i "$HOME/Wallpapers/minimal.png"
+fi
+if [ -f "$HOME/.cache/wal/colors.Xresources" ]; then
+  cat "$HOME/.cache/wal/colors.Xresources" >> "$HOME/.Xresources"
+fi
+
+log "Building and installing dwm suite"
+$SUDO make -C "$HOME/sourcecode/st" install
+$SUDO make -C "$HOME/sourcecode/dwmblocks" install
+$SUDO make -C "$HOME/sourcecode/dwm" install
+$SUDO make -C "$HOME/sourcecode/dmenu" install
+
+log "All done. You can now start dwm from your display manager or via startx."

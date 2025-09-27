@@ -1,11 +1,43 @@
 #!/bin/sh
+# mpv-clip — play URL/text from the clipboard with mpv
+# - Prompts for Fullscreen or Floating window via dmenu
+# - Reads from the X clipboard (Ctrl+C buffer)
+# - Safer quoting, dependency checks, and configurable via env vars
 set -e
-choice="Fullscreen
-Floating"
-select=$(printf "$choice" | dmenu -i -p "Select size:")
-if [ "$select" == Fullscreen ]; then
-  mpv --ytdl-format=bv*.3*+bestaudio/best --fullscreen $(xclip -o)
-else
-  mpv --ytdl-format=bv*.3*+bestaudio/best $(xclip -o)
+
+DMENU_BIN=${DMENU_BIN:-dmenu}
+XCLIP_BIN=${XCLIP_BIN:-xclip}
+MPV_BIN=${MPV_BIN:-mpv}
+# Override with: YTDL_FORMAT='...' mpv-clip
+YTDL_FORMAT=${YTDL_FORMAT:-bv*.3*+bestaudio/best}
+
+# Ensure dependencies exist
+for cmd in "$DMENU_BIN" "$XCLIP_BIN" "$MPV_BIN"; do
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    printf "Error: %s not found in PATH\n" "$cmd" >&2
+    exit 127
+  fi
+done
+
+# Ask desired window mode
+select=$(
+  printf "%s\n" "Fullscreen" "Floating" | "$DMENU_BIN" -i -p "Select size:"
+)
+[ -n "$select" ] || exit 1
+
+# Read clipboard content (use the clipboard selection, not primary)
+clip=$("$XCLIP_BIN" -selection clipboard -o 2>/dev/null || true)
+if [ -z "$clip" ]; then
+  printf "%s\n" "Error: Clipboard is empty or not text." >&2
+  exit 1
 fi
 
+# Build mpv arguments
+args="--ytdl-format=$YTDL_FORMAT"
+if [ "$select" = "Fullscreen" ]; then
+  args="$args --fullscreen"
+fi
+
+# Execute mpv with the clipboard content
+# shellcheck disable=SC2086
+exec "$MPV_BIN" $args -- "$clip"
