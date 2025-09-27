@@ -1,14 +1,65 @@
 #!/bin/sh
-set -e
-WALLPAPER_PATH="$HOME/Wallpapers/"
-DMENU="$(ls $WALLPAPER_PATH | dmenu -i -l 30 -p 'Choose your Wallpaper: ')"
-SELECTED="$WALLPAPER_PATH$DMENU"
-if [ -z "$DMENU"]; then
-	exit 0
-else
-	wal -i $SELECTED
-  truncate --size 0 $HOME/.Xresources
-	cat ~/.cache/wal/colors.Xresources >> ~/.Xresources
-  wal-telegram -t
-	pkill dwm
+set -eu
+
+# Configuration
+WALLPAPER_DIR="${WALLPAPER_DIR:-$HOME/Wallpapers}"
+DMENU_CMD="${DMENU_CMD:-dmenu}"
+DMENU_OPTS="${DMENU_OPTS:--i -l 30 -p 'Choose your Wallpaper:'}"
+XR_FILE="$HOME/.Xresources"
+WAL_COLORS_INCLUDE="#include \"$HOME/.cache/wal/colors.Xresources\""
+
+# Validate dependencies
+if ! command -v "$DMENU_CMD" >/dev/null 2>&1; then
+  echo "Error: dmenu is not installed or not in PATH (DMENU_CMD=$DMENU_CMD)." >&2
+  exit 1
+fi
+if ! command -v wal >/dev/null 2>&1; then
+  echo "Error: pywal (wal) is not installed." >&2
+  exit 1
+fi
+
+# Ensure wallpaper directory exists
+if [ ! -d "$WALLPAPER_DIR" ]; then
+  echo "Error: Wallpaper directory not found: $WALLPAPER_DIR" >&2
+  exit 1
+fi
+
+# Build menu list of images (basenames) safely
+CHOICE="$(
+  find "$WALLPAPER_DIR" -maxdepth 1 -type f \
+    \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.bmp' -o -iname '*.webp' \) \
+    -printf '%f\n' | sort | $DMENU_CMD $DMENU_OPTS
+)"
+
+# If user cancels selection
+if [ -z "$CHOICE" ]; then
+  exit 0
+fi
+
+SELECTED="$WALLPAPER_DIR/$CHOICE"
+if [ ! -f "$SELECTED" ]; then
+  echo "Error: Selected file not found: $SELECTED" >&2
+  exit 1
+fi
+
+# Apply colors and wallpaper via pywal
+wal -i "$SELECTED"
+
+# Ensure .Xresources exists and includes wal's colors file (non-destructive)
+: > "${XR_FILE}" 2>/dev/null || true
+[ -f "$XR_FILE" ] || : > "$XR_FILE"
+if ! grep -Fqx "$WAL_COLORS_INCLUDE" "$XR_FILE" 2>/dev/null; then
+  printf '%s\n' "$WAL_COLORS_INCLUDE" >> "$XR_FILE"
+fi
+# Merge into X server
+xrdb -merge "$XR_FILE" 2>/dev/null || true
+
+# Update wal-telegram theme if available
+if command -v wal-telegram >/dev/null 2>&1; then
+  wal-telegram -t || true
+fi
+
+# Restart dwm to reload colors if running (optional)
+if command -v pgrep >/dev/null 2>&1 && pgrep -x dwm >/dev/null 2>&1; then
+  pkill -x dwm || true
 fi
