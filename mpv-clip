@@ -9,7 +9,7 @@ DMENU_BIN=${DMENU_BIN:-dmenu}
 XCLIP_BIN=${XCLIP_BIN:-xclip}
 MPV_BIN=${MPV_BIN:-mpv}
 # Override with: YTDL_FORMAT='...' mpv-clip
-YTDL_FORMAT=${YTDL_FORMAT:-bv*.3*+bestaudio/best}
+YTDL_FORMAT=${YTDL_FORMAT:-'bestvideo[height<=720]+bestaudio/best'}
 
 # Ensure dependencies exist
 for cmd in "$DMENU_BIN" "$XCLIP_BIN" "$MPV_BIN"; do
