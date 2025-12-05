@@ -1,11 +1,5 @@
 #!/bin/sh
 # Dwm Auto Install Script (improved)
-# - safer root handling (sudo/doas or run as root)
-# - resilient package manager detection
-# - idempotent repo clone/update and symlinks
-# - fixed broken conditionals and typos
-# - consistent paths and error handling
-# - avoids using sudo directly when doas is used
 
 set -eu
 
