@@ -65,7 +65,7 @@ else
       $SUDO pacman -Sy --noconfirm --needed \
         libxft ttf-sourcecodepro-nerd ttf-iosevka-nerd \
         meson ninja acpi uthash noto-fonts-emoji git feh picom imagemagick \
-        python-pip curl openssh yt-dlp ranger zip
+        python-pipx curl openssh yt-dlp ranger zip
       ;;
     emerge)
       # Keep interactive as per Gentoo workflows
@@ -78,7 +78,7 @@ else
     xbps-install)
       # Void Linux - sync and install build/runtime deps
       $SUDO xbps-install -Sy \
-        git curl feh picom ImageMagick xrdb python3-pip \
+        git curl feh picom ImageMagick xrdb python3-pipx \
         libXinerama-devel fontconfig-devel libXft-devel harfbuzz-devel \
         make gcc pkg-config ninja noto-fonts-emoji font-iosevka \
         openssh yt-dlp ranger zip
@@ -147,12 +147,6 @@ $SUDO curl -fsSL https://raw.githubusercontent.com/charlesmenez/dotfiles/main/yt
 # picom config
 curl -fsSL https://raw.githubusercontent.com/charlesmenez/dotfiles/main/picom/picom.conf -o "$HOME/.config/picom/picom.conf"
 
-log "Ensuring pywal is installed"
-if ! python3 -m pip show pywal >/dev/null 2>&1; then
-  python3 -m pip install --user --upgrade pywal
-else
-  log "pywal already present"
-fi
 
 # Make wal available system-wide when installed for the user
 if [ -x "$HOME/.local/bin/wal" ]; then
